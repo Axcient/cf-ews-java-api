@@ -23,6 +23,7 @@
 
 package microsoft.exchange.webservices.data.property.complex;
 
+import jakarta.xml.bind.DatatypeConverter;
 import microsoft.exchange.webservices.data.core.EwsServiceXmlReader;
 import microsoft.exchange.webservices.data.core.EwsServiceXmlWriter;
 import microsoft.exchange.webservices.data.core.EwsUtilities;
@@ -39,8 +40,6 @@ import org.apache.commons.logging.LogFactory;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import javax.xml.bind.DatatypeConverter;
 
 /**
  * Represents a change of time for a time zone.
@@ -209,18 +208,18 @@ public final class TimeChange extends ComplexProperty {
    */
   @Override
   public boolean tryReadElementFromXml(EwsServiceXmlReader reader)
-      throws Exception {
+          throws Exception {
 
     if (reader.getLocalName().equalsIgnoreCase(XmlElementNames.Offset)) {
       this.offset = EwsUtilities.getXSDurationToTimeSpan(reader.readElementValue());
       return true;
     } else if (reader.getLocalName().equalsIgnoreCase(
-        XmlElementNames.RelativeYearlyRecurrence)) {
+            XmlElementNames.RelativeYearlyRecurrence)) {
       this.recurrence = new TimeChangeRecurrence();
       this.recurrence.loadFromXml(reader, reader.getLocalName());
       return true;
     } else if (reader.getLocalName().equalsIgnoreCase(
-        XmlElementNames.AbsoluteDate)) {
+            XmlElementNames.AbsoluteDate)) {
       Calendar cal = DatatypeConverter.parseDate(reader.readElementValue());
       cal.setTimeZone(TimeZone.getTimeZone("UTC"));
       this.absoluteDate = cal.getTime();
@@ -242,9 +241,9 @@ public final class TimeChange extends ComplexProperty {
    */
   @Override
   public void readAttributesFromXml(EwsServiceXmlReader reader)
-      throws Exception {
+          throws Exception {
     this.timeZoneName = reader
-        .readAttributeValue(XmlAttributeNames.TimeZoneName);
+            .readAttributeValue(XmlAttributeNames.TimeZoneName);
   }
 
   /**
@@ -256,7 +255,7 @@ public final class TimeChange extends ComplexProperty {
   public void writeAttributesToXml(EwsServiceXmlWriter writer) {
     try {
       writer.writeAttributeValue(XmlAttributeNames.TimeZoneName,
-          this.timeZoneName);
+              this.timeZoneName);
     } catch (ServiceXmlSerializationException e) {
       LOG.error(e);
     }
@@ -270,27 +269,27 @@ public final class TimeChange extends ComplexProperty {
    */
   @Override
   public void writeElementsToXml(EwsServiceXmlWriter writer)
-      throws Exception {
+          throws Exception {
     if (this.offset != null) {
       writer.writeElementValue(XmlNamespace.Types,
-          XmlElementNames.Offset, EwsUtilities
-              .getTimeSpanToXSDuration(this.getOffset()));
+              XmlElementNames.Offset, EwsUtilities
+                      .getTimeSpanToXSDuration(this.getOffset()));
     }
 
     if (this.recurrence != null) {
       this.recurrence.writeToXml(writer,
-          XmlElementNames.RelativeYearlyRecurrence);
+              XmlElementNames.RelativeYearlyRecurrence);
     }
 
     if (this.absoluteDate != null) {
       writer.writeElementValue(XmlNamespace.Types,
-          XmlElementNames.AbsoluteDate, EwsUtilities
-              .dateTimeToXSDate(this.getAbsoluteDate()));
+              XmlElementNames.AbsoluteDate, EwsUtilities
+                      .dateTimeToXSDate(this.getAbsoluteDate()));
     }
 
     if (this.time != null) {
       writer.writeElementValue(XmlNamespace.Types, XmlElementNames.Time,
-          this.getTime().toXSTime());
+              this.getTime().toXSTime());
     }
   }
 

@@ -1,0 +1,45 @@
+pipeline {
+  agent any
+  tools {
+  maven "Maven 3.5.0"
+  jdk "OpenJDK 11"
+  }
+
+  parameters {
+    choice(name: 'MAVEN_STAGE', choices: ['package', 'deploy'], description: '''
+    Whether to package or deploy the plugin:    
+      package - Package the plugin for retrieval from the Jenkins job's workspace
+      deploy - Package and deploy the plugin to the configured Maven repository (presumably x360Cloud's internal Nexus repository)
+    ''')
+  }
+
+  stages {
+    stage('Clean Workspace') {
+      steps {
+        deleteDir()
+      }
+    }
+    stage ('checkout') {
+      steps {
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: '${GIT_TAG}']],
+            userRemoteConfigs: [
+                [
+                    url: 'git@github.com:Axcient/cf-ews-java-api.git',
+                    credentialsId: '232cb6c4-dc4c-4c63-a22c-8cabd8278c26'
+                ]
+            ]
+        ])
+      }
+    }
+
+    stage ('build') {
+      steps {
+        script{
+          sh "mvn clean -X ${MAVEN_STAGE} -Djacoco.skip=true -DNEXUS_SNAPSHOT_URL=$NEXUS_SNAPSHOT_URL -DNEXUS_RELEASE_URL=$NEXUS_RELEASE_URL"
+        }
+      }
+    }
+  }
+}

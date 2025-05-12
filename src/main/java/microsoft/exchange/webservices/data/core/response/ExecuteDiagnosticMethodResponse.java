@@ -68,9 +68,9 @@ public final class ExecuteDiagnosticMethodResponse extends ServiceResponse {
    */
   @Override
   protected void readElementsFromXml(EwsServiceXmlReader reader)
-      throws Exception {
+          throws Exception {
     reader.readStartElement(XmlNamespace.Messages,
-        XmlElementNames.ReturnValue);
+            XmlElementNames.ReturnValue);
 
     XMLEventReader returnValueReader = reader.getXmlReaderForNode();
     //this.returnValue = (Document) new SafeXmlDocument();
@@ -80,7 +80,7 @@ public final class ExecuteDiagnosticMethodResponse extends ServiceResponse {
 
     reader.skipCurrentElement();
     reader.readEndElementIfNecessary(XmlNamespace.Messages,
-        XmlElementNames.ReturnValue);
+            XmlElementNames.ReturnValue);
   }
 
 
@@ -89,9 +89,9 @@ public final class ExecuteDiagnosticMethodResponse extends ServiceResponse {
    * @throws javax.xml.parsers.ParserConfigurationException
    */
   public Document retriveDocument(XMLEventReader xmlEventReader)
-      throws ParserConfigurationException {
+          throws ParserConfigurationException {
     DocumentBuilderFactory dbfInstance = DocumentBuilderFactory
-        .newInstance();
+            .newInstance();
     DocumentBuilder documentBuilder = dbfInstance.newDocumentBuilder();
     Document document = documentBuilder.newDocument();
 
@@ -114,24 +114,24 @@ public final class ExecuteDiagnosticMethodResponse extends ServiceResponse {
         StartElement ele = (StartElement) xmleve;
         Element element = null;
         element = document.createElementNS(ele.getName()
-            .getNamespaceURI(), ele.getName().getLocalPart());
+                .getNamespaceURI(), ele.getName().getLocalPart());
 
         Iterator<Attribute> ite = ele.getAttributes();
 
         while (ite.hasNext()) {
           Attribute attr = ite.next();
           element.setAttribute(attr.getName().getLocalPart(),
-              attr.getValue());
+                  attr.getValue());
         }
 
         String xmlns = EwsUtilities.WSTrustFebruary2005Namespace;//"http://schemas.xmlsoap.org/wsdl/";
-        ite = ele.getNamespaces();
-        while (ite.hasNext()) {
-          Namespace ns = (Namespace) ite.next();
+        Iterator<Namespace> iteNamespaces = ele.getNamespaces();
+        while (iteNamespaces.hasNext()) {
+          Namespace ns = iteNamespaces.next();
           String name = ns.getPrefix();
           if (!name.isEmpty()) {
             element.setAttributeNS(xmlns, name,
-                ns.getNamespaceURI());
+                    ns.getNamespaceURI());
           } else {
             xmlns = ns.getNamespaceURI();
           }
