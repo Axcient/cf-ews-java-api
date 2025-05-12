@@ -281,6 +281,32 @@
             <!-- Deployment / build plugins -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <!-- Relocate commonly conflicting dependencies -->
+                                <relocation>
+                                    <pattern>jakarta.xml.bind</pattern>
+                                    <shadedPattern>com.microsoft.ews.shaded.jakarta.xml.bind</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>jakarta.xml.ws</pattern>
+                                    <shadedPattern>com.microsoft.ews.shaded.jakarta.xml.ws</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M9</version>
             </plugin>
