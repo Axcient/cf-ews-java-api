@@ -291,7 +291,6 @@
                         </goals>
                         <configuration>
                             <relocations>
-                                <!-- Relocate commonly conflicting dependencies -->
                                 <relocation>
                                     <pattern>jakarta.xml.bind</pattern>
                                     <shadedPattern>com.microsoft.ews.shaded.jakarta.xml.bind</shadedPattern>
@@ -301,6 +300,14 @@
                                     <shadedPattern>com.microsoft.ews.shaded.jakarta.xml.ws</shadedPattern>
                                 </relocation>
                             </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/mailcap</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
